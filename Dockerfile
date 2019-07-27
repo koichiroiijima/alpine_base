@@ -1,8 +1,11 @@
 FROM alpine:3.10
 
+ARG IMAGE_NAME=alpine_base
+ARG IMAGE_VERSION=0.0.1
+
 LABEL \
-    NAME=aplpine \
-    VERSION=3.10-0.0.1-20190707
+    NAME=${IMAGE_NAME}} \
+    VERSION=${IMAGE_VERSION}}
 
 # Set User
 USER root
@@ -23,7 +26,9 @@ RUN set -ex \
     && \
     echo "@edgecommunity http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
     && \
-    echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
+    echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    && \
+    echo "@v38 http://nl.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories
 
 # Set timezone
 ENV TZ=America/Los_Angeles
@@ -74,6 +79,7 @@ RUN set -ex \
         libssh2 \
         libssl1.1 \
         libc6-compat \
+        musl \
         linux-headers
 
 # Clean apk
@@ -82,3 +88,5 @@ RUN set -ex \
     apk cache clean \
     && \
     rm -rf /var/cache/apk/*
+
+CMD ["bash"]
