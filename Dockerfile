@@ -36,14 +36,11 @@ RUN set -ex \
     && \
     apk add --no-cache --update \
     tzdata
-    # && \
-    # ls /usr/share/zoneinfo \
-    # && \
+
 RUN set -ex && \
     cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
     echo ${TZ} > /etc/timezone &&\
-    date
-RUN set -ex \
+    date \
     && \
     apk del tzdata
 
@@ -57,6 +54,7 @@ RUN set -ex \
         tar \
         gzip \
         unzip \
+        coreutils \
         ca-certificates \
         openssl \
         openssh-client \
