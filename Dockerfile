@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.10.1
 
 ARG IMAGE_NAME=alpine_base
 ARG IMAGE_VERSION=0.0.1
@@ -22,13 +22,13 @@ RUN set -ex \
     && \
     ln -snf /var/cache/apk/ /etc/apk/cache \
     && \
-    echo "@edge http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
+    echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
     && \
-    echo "@edgecommunity http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
+    echo "http://nl.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
     && \
-    echo "@testing http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    echo "http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && \
-    echo "@v38 http://nl.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories
+    echo "http://nl.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories
 
 # Set timezone
 ENV TZ=America/Los_Angeles
@@ -74,8 +74,6 @@ RUN set -ex \
 RUN set -ex \
     && \
     apk add --no-cache --update \
-        libssh2 \
-        libssl1.1 \
         libc6-compat \
         musl \
         linux-headers
