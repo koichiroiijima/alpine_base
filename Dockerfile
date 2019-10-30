@@ -1,4 +1,4 @@
-FROM alpine:3.10.1
+FROM alpine:3.10.3
 
 ARG IMAGE_NAME=alpine_base
 ARG IMAGE_VERSION=0.0.1
@@ -11,12 +11,21 @@ LABEL \
 USER root
 
 # Set working directory
-RUN set -ex && mkdir -p /root/bin $$ mkdir -p /opt/bin
-WORKDIR /opt/
-ENV PATH=${PATH}:/opt/bin:/root/bin
+# Set User
+USER root
 
-# Set apk repository
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV TZ=America/Los_Angeles
+ENV PATH=/opt/bin:/root/bin:${PATH}
+
+# Set working directory
+WORKDIR /opt/
 RUN set -ex \
+    && \
+    mkdir -p /root/bin \
+    && \
+    mkdir -p /opt/bin \
     && \
     mkdir -p /var/cache/apk/ \
     && \
@@ -28,24 +37,21 @@ RUN set -ex \
     && \
     echo "http://nl.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
     && \
-    echo "http://nl.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories
-
-# Set timezone
-ENV TZ=America/Los_Angeles
-RUN set -ex \
+    echo "http://nl.alpinelinux.org/alpine/v3.8/main" >> /etc/apk/repositories \
+    && \
+    apk update \
     && \
     apk add --no-cache --update \
-    tzdata
-
-RUN set -ex && \
-    cp /usr/share/zoneinfo/${TZ} /etc/localtime && \
-    echo ${TZ} > /etc/timezone &&\
+    tzdata \
+    && \
+    cp /usr/share/zoneinfo/${TZ} /etc/localtime \
+    && \
+    echo ${TZ} > /etc/timezone \
+    && \
     date \
     && \
-    apk del tzdata
-
+    apk del tzdata \
 # Install utility commands
-RUN set -ex \
     && \
     apk add --no-cache --update \
         bash \
@@ -58,31 +64,29 @@ RUN set -ex \
         ca-certificates \
         openssl \
         openssh-client \
-        gnupg
-
+        gnupg \
+        vim \
 # Install develpment commands
-RUN set -ex \
     && \
     apk add --no-cache --update \
         git \
         gcc \
         g++ \
         gfortran \
-        perl 
-
+        perl \
 # Install libraries 
-RUN set -ex \
     && \
     apk add --no-cache --update \
         libc6-compat \
         musl \
-        linux-headers
-
+        linux-headers \
 # Clean apk
-RUN set -ex \
     && \
     apk cache clean \
     && \
     rm -rf /var/cache/apk/*
+
+ENV ENV=/root/.bashrc
+SHELL ["/bin/bash", "-c"]
 
 CMD ["bash"]
