@@ -10,10 +10,6 @@ LABEL \
 # Set User
 USER root
 
-# Set working directory
-# Set User
-USER root
-
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV TZ=America/Los_Angeles
@@ -57,6 +53,7 @@ RUN set -ex \
         bash \
         wget \
         curl \
+	git \
         tar \
         gzip \
         unzip \
